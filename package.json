@@ -1,0 +1,35 @@
+{
+  "name": "gulp-inlinesvg",
+  "version": "1.0.0",
+  "description": "Embeds svg files inside css.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://jbevers@stash.sdl.com/scm/~jbevers/gulp-inlinesvg.git"
+  },
+  "keywords": [
+    "gulpplugin",
+    "svg",
+    "css",
+    "inline",
+    "minification"
+  ],
+  "author": "jbevers@sdl.com",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "*",
+    "stream-assert": "^2.0.3"
+  },
+  "dependencies": {
+    "chalk": "^1.1.0",
+    "gulp-util": "^3.0.6",
+    "svgo": "^0.5.5",
+    "through2": "^2.0.0"
+  }
+}
