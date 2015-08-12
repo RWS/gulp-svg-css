@@ -8,23 +8,30 @@ var inlinesvg = require('./');
 it('should minify svg and output css file', function (done) {
 	var stream = inlinesvg();
 	var collpasedSvg = __dirname + '/testdata/collapsed.svg';
-	fs.readFile(collpasedSvg, 'utf8', function (err, data) {
+	var expandedSvg = __dirname + '/testdata/expanded.svg';
+	fs.readFile(collpasedSvg, 'utf8', function (err, dataCollapsed) {
 		if (err) {
 			throw err;
 		}
-		stream
-			.pipe(streamAssert.length(1))
-			.pipe(streamAssert.first(function (newFile) {
-				assert.equal(newFile.basename, 'icons.css');
-				assert.equal(newFile.contents.length, 254);
-				console.log(newFile.contents.toString());
-			}))
-			.pipe(streamAssert.end(done));
+		fs.readFile(expandedSvg, 'utf8', function (err, dataExpanded) {
+			stream
+				.pipe(streamAssert.length(1))
+				.pipe(streamAssert.first(function (newFile) {
+					assert.equal(newFile.basename, 'icons.css');
+					assert.equal(newFile.contents.length, 504);
+					console.log(newFile.contents.toString());
+				}))
+				.pipe(streamAssert.end(done));
 
-		stream.write(new gutil.File({
-			path: collpasedSvg,
-			contents: new Buffer(data)
-		}));
-		stream.end();
+			stream.write(new gutil.File({
+				path: collpasedSvg,
+				contents: new Buffer(dataCollapsed)
+			}));
+			stream.write(new gutil.File({
+				path: expandedSvg,
+				contents: new Buffer(dataExpanded)
+			}));
+			stream.end();
+		});
 	});
 });
