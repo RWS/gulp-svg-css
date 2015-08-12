@@ -31,8 +31,16 @@ module.exports = function (options) {
 			// Put it inside a css file
 			var normalizedFileName = path.normalize(path.basename(file.path, '.svg')).toLowerCase();
 			// Replace dots with hypens
-			normalizedFileName = normalizedFileName.replace(/\./gi,'-');
-			cssRules.push('.icon-' + normalizedFileName + ' { background-image: url("data:image/svg+xml;charset=utf8, ' + minifiedSvgContent.data + ');}');
+			normalizedFileName = normalizedFileName.replace(/\./gi, '-');
+			// Encode svg data
+			var encodedSvg = minifiedSvgContent.data;
+			encodedSvg = encodedSvg.replace(/%/gi, '%25');			
+			encodedSvg = encodedSvg.replace(/</gi, '%3C');
+			encodedSvg = encodedSvg.replace(/>/gi, '%3E');
+			encodedSvg = encodedSvg.replace(/#/gi, '%23');
+			encodedSvg = encodedSvg.replace(/\\/gi, '\'');
+			
+			cssRules.push('.icon-' + normalizedFileName + ' { background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + ');}');
 
 			// Don't pipe svg image
 			cb();
