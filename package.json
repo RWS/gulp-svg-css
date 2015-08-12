@@ -23,6 +23,7 @@
   "author": "jbevers@sdl.com",
   "license": "ISC",
   "devDependencies": {
+    "css": "^2.2.1",
     "mocha": "*",
     "stream-assert": "^2.0.3"
   },

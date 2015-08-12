@@ -30,6 +30,8 @@ module.exports = function (options) {
 			
 			// Put it inside a css file
 			var normalizedFileName = path.normalize(path.basename(file.path, '.svg')).toLowerCase();
+			// Replace dots with hypens
+			normalizedFileName = normalizedFileName.replace(/\./gi,'-');
 			cssRules.push('.icon-' + normalizedFileName + ' { background-image: url("data:image/svg+xml;charset=utf8, ' + minifiedSvgContent.data + ');}');
 
 			// Don't pipe svg image
