@@ -20,7 +20,7 @@ it('should minify svg and output css file', function (done) {
 				.pipe(streamAssert.first(function (newFile) {
 					var fileContents = newFile.contents.toString();
 					assert.equal(newFile.basename, 'icons.css');
-					assert.equal(newFile.contents.length, 548);
+					assert.equal(newFile.contents.length, 550);
 					// Check if special characters are escaped
 					assert.equal(fileContents.indexOf("<"), -1, "Contains < char");
 					assert.equal(fileContents.indexOf(">"), -1, "Contains > char");

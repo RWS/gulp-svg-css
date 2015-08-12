@@ -40,7 +40,7 @@ module.exports = function (options) {
 			encodedSvg = encodedSvg.replace(/#/gi, '%23');
 			encodedSvg = encodedSvg.replace(/\\/gi, '\'');
 			
-			cssRules.push('.icon-' + normalizedFileName + ' { background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + ');}');
+			cssRules.push('.icon-' + normalizedFileName + ' { background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");}');
 
 			// Don't pipe svg image
 			cb();
