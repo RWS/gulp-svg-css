@@ -38,7 +38,7 @@ module.exports = function (options) {
 			encodedSvg = encodedSvg.replace(/</gi, '%3C');
 			encodedSvg = encodedSvg.replace(/>/gi, '%3E');
 			encodedSvg = encodedSvg.replace(/#/gi, '%23');
-			encodedSvg = encodedSvg.replace(/\\/gi, '\'');
+			encodedSvg = encodedSvg.replace(/\"/gi, '\'');
 			
 			cssRules.push('.icon-' + normalizedFileName + ' { background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");}');
 
