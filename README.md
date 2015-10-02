@@ -1,6 +1,6 @@
-# Gulp inline svg
+# gulp-svg-css
 
-Gulp plugin that embeds svg images inside a single CSS file.
+Gulp plugin that embeds svg images inside a single CSS file using data-uri.
 
 # Usage
 
@@ -9,7 +9,7 @@ Example usage of the plugin:
     gulp.task('create-css', function () {
         return gulp
             .src('icons/**/*.svg')
-            .pipe(inlinesvg())
+            .pipe(svgcss())
             .pipe(gulp.dest('dist/'));
         });
     });
