@@ -26,7 +26,7 @@ module.exports = function (options) {
 
         var svgContent = file.contents.toString();
         // Remove line breaks
-        svgContent = svgContent.replace(/\n/gi, '');
+        svgContent = svgContent.replace(/\r\n/gi, '');
 
         // Put it inside a css file
         var normalizedFileName = path.normalize(path.basename(file.path, '.svg')).toLowerCase();
