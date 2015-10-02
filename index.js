@@ -13,6 +13,37 @@ module.exports = function (options) {
 
     var cssRules = [];
 
+    /**
+     * Returns encoded string of svg file.
+     * @method buildSvgDataURI
+     * @param {String} data Contents of svg file.
+     */
+    function buildSvgDataURI(svgContent) {
+        return svgContent
+            .replace(/^<\?xml.*?>/gmi, '') // Xml declaration
+            .replace(/<\!\-\-(.*(?=\-\->))\-\->/gmi, '') // Comments
+            .replace(/[\r\n]/gmi, '') // Line breaks
+            .replace(/(\r\n|\n|\r)$/, '') // New line end of file
+            .replace(/\t/gmi, ' ') // Tabs (replace with space)
+            .replace(/%/gmi, '%25') // %
+            .replace(/</gmi, '%3C') // <
+            .replace(/>/gmi, '%3E') // >
+            .replace(/#/gmi, '%23') // #
+            .replace(/\"/gmi, '\''); // "
+    }
+
+    /**
+     * Returns css rule for svg file.
+     * @method buildCssRule
+     * @param {String} normalizedFileName rule for svg file.
+     * @param {String} encodedSvg Encoded svg content.
+     */
+    function buildCssRule(normalizedFileName, encodedSvg) {
+        return '.icon-' + normalizedFileName + ' {\n' +
+        '    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");\n' +
+        '}\n'
+    }
+
     return through.obj(function (file, enc, cb) {
         if (file.isNull()) {
             cb(null, file);
@@ -25,8 +56,6 @@ module.exports = function (options) {
         }
 
         var svgContent = file.contents.toString();
-        // Remove line breaks
-        svgContent = svgContent.replace(/\r\n/gi, '');
 
         // Put it inside a css file
         var normalizedFileName = path.normalize(path.basename(file.path, '.svg')).toLowerCase();
@@ -35,14 +64,8 @@ module.exports = function (options) {
         normalizedFileName = normalizedFileName.replace(/\./gi, '-');
 
         // Encode svg data
-        var encodedSvg = svgContent;
-        encodedSvg = encodedSvg.replace(/%/gi, '%25');
-        encodedSvg = encodedSvg.replace(/</gi, '%3C');
-        encodedSvg = encodedSvg.replace(/>/gi, '%3E');
-        encodedSvg = encodedSvg.replace(/#/gi, '%23');
-        encodedSvg = encodedSvg.replace(/\"/gi, '\'');
-
-        cssRules.push('.icon-' + normalizedFileName + ' { background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");}');
+        var encodedSvg = buildSvgDataURI(svgContent);
+        cssRules.push(buildCssRule(normalizedFileName, encodedSvg));
 
         // Don't pipe svg image
         cb();
