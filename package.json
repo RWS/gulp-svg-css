@@ -6,9 +6,6 @@
   "scripts": {
     "test": "mocha"
   },
-  "files": [
-    "index.js"
-  ],
   "repository": {
     "type": "git",
     "url": "https://stash.sdl.com/scm/~jbevers/gulp-svg-css.git"
@@ -20,7 +17,10 @@
     "inline",
     "minification"
   ],
-  "author": "jbevers@sdl.com",
+  "author": {
+    "name": "Jan Bevers",
+    "email": "jbevers@sdl.com"
+  },
   "license": "Apache-2.0",
   "devDependencies": {
     "css": "^2.2.1",
