@@ -53,6 +53,7 @@ module.exports = function (options) {
         '    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");\n' +
         '    width: ' + width + ';\n' +
         '    height: ' + height + ';\n' +
+        '    background-repeat: no-repeat;\n' +
         '}\n'
     }
 
@@ -66,6 +67,14 @@ module.exports = function (options) {
         var svgel = doc.getElementsByTagName('svg')[0];
         var width = svgel.getAttribute('width');
         var height = svgel.getAttribute('height');
+
+        if (width && !isNaN(width)) {
+            width = width + 'px';
+        }
+
+        if (height && !isNaN(height)) {
+            height = height + 'px';
+        }
 
         return { width: width, height: height }
     }

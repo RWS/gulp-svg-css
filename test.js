@@ -9,7 +9,8 @@ var testData = {
     collpasedSvg: fs.readFileSync(__dirname + '/testdata/collapsed.svg'),
     expandedSvg: fs.readFileSync(__dirname + '/testdata/expanded.svg'),
     noDimensions: fs.readFileSync(__dirname + '/testdata/nodimensions.svg'),
-    customDimensions: fs.readFileSync(__dirname + '/testdata/customdimensions.svg')
+    customDimensions: fs.readFileSync(__dirname + '/testdata/customdimensions.svg'),
+    nopxInDimensions: fs.readFileSync(__dirname + '/testdata/nopxindimensions.svg')
 };
 
 it('should minify svg and output css file', function (done) {
@@ -20,7 +21,7 @@ it('should minify svg and output css file', function (done) {
         .pipe(streamAssert.first(function (newFile) {
             var fileContents = newFile.contents.toString();
             assert.equal(newFile.basename, 'icons.css');
-            assert.equal(newFile.contents.length, 1197);
+            assert.equal(newFile.contents.length, 1265);
             // Check if special characters are escaped
             assert.equal(fileContents.indexOf("<"), -1, "Contains < char");
             assert.equal(fileContents.indexOf(">"), -1, "Contains > char");
@@ -58,18 +59,26 @@ it('should use dimensions from svg source', function (done) {
            var fileContents = newFile.contents.toString();
            // Check if rules are ok
            var parsedCss = css.parse(fileContents);
-           assert.equal(parsedCss.stylesheet.rules.length, 1);
+           assert.equal(parsedCss.stylesheet.rules.length, 2);
            // Check dimensions
            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '1234px');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '4321px');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].value, '12345px');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].value, '54321px');
        }))
        .pipe(streamAssert.end(done));
 
     stream.write(new gutil.File({
         path: 'customdimensions.svg',
         contents: new Buffer(testData.customDimensions)
+    }));
+    stream.write(new gutil.File({
+        path: 'nopxindimensions.svg',
+        contents: new Buffer(testData.nopxInDimensions)
     }));
     stream.end();
 });
