@@ -21,7 +21,29 @@ Example usage of the plugin:
 
 # Options
 
-TODO
+## options.fileName
+Type: `String`
+Default value: `icons`
+
+Name of the target css file.
+
+## options.cssPrefix
+Type: `String`  
+Default value: `icon-`  
+
+A string to prefix all css classes with.
+
+## options.defaultWidth
+Type: `String`  
+Default: `"16px"`  
+
+A string that MUST be defined in px that will be the size of the background-image if there is no width given in the SVG element.
+
+## options.defaultHeight
+Type: `String`  
+Default: `"16px"`  
+
+Similar to defaultWidth, but for height.
 
 # Running tests
 

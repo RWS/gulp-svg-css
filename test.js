@@ -3,45 +3,155 @@ var fs = require('fs');
 var assert = require('assert');
 var streamAssert = require('stream-assert');
 var gutil = require('gulp-util');
-var inlinesvg = require('./');
+var svgcss = require('./');
 var css = require('css');
+var testData = {
+    collpasedSvg: fs.readFileSync(__dirname + '/testdata/collapsed.svg'),
+    expandedSvg: fs.readFileSync(__dirname + '/testdata/expanded.svg'),
+    noDimensions: fs.readFileSync(__dirname + '/testdata/nodimensions.svg'),
+    customDimensions: fs.readFileSync(__dirname + '/testdata/customdimensions.svg')
+};
 
 it('should minify svg and output css file', function (done) {
-    var stream = inlinesvg();
-    var collpasedSvg = __dirname + '/testdata/collapsed.svg';
-    var expandedSvg = __dirname + '/testdata/expanded.svg';
-    fs.readFile(collpasedSvg, 'utf8', function (err, dataCollapsed) {
-        if (err) {
-            throw err;
-        }
-        fs.readFile(expandedSvg, 'utf8', function (err, dataExpanded) {
-            stream
-                .pipe(streamAssert.length(1))
-                .pipe(streamAssert.first(function (newFile) {
-                    var fileContents = newFile.contents.toString();
-                    assert.equal(newFile.basename, 'icons.css');
-                    assert.equal(newFile.contents.length, 1127);
-                    // Check if special characters are escaped
-                    assert.equal(fileContents.indexOf("<"), -1, "Contains < char");
-                    assert.equal(fileContents.indexOf(">"), -1, "Contains > char");
-                    assert.equal(fileContents.indexOf("#"), -1, "Contains # char");
-                    // Check if rules are ok
-                    var parsedCss = css.parse(fileContents);
-                    assert.equal(parsedCss.stylesheet.rules.length, 2);
-                    // No dots inside
-                    assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-collapsed-16x16');
-                }))
-                .pipe(streamAssert.end(done));
+    var stream = svgcss();
 
-            stream.write(new gutil.File({
-                path: 'collapsed.16x16.svg',
-                contents: new Buffer(dataCollapsed)
-            }));
-            stream.write(new gutil.File({
-                path: 'expanded.16x16.svg',
-                contents: new Buffer(dataExpanded)
-            }));
-            stream.end();
-        });
+    stream
+        .pipe(streamAssert.length(1))
+        .pipe(streamAssert.first(function (newFile) {
+            var fileContents = newFile.contents.toString();
+            assert.equal(newFile.basename, 'icons.css');
+            assert.equal(newFile.contents.length, 1197);
+            // Check if special characters are escaped
+            assert.equal(fileContents.indexOf("<"), -1, "Contains < char");
+            assert.equal(fileContents.indexOf(">"), -1, "Contains > char");
+            assert.equal(fileContents.indexOf("#"), -1, "Contains # char");
+            // Check if rules are ok
+            var parsedCss = css.parse(fileContents);
+            assert.equal(parsedCss.stylesheet.rules.length, 2);
+            // No dots inside
+            assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-collapsed-16x16');
+            // Check dimensions
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '16px');
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '16px');
+        }))
+        .pipe(streamAssert.end(done));
+
+    stream.write(new gutil.File({
+        path: 'collapsed.16x16.svg',
+        contents: new Buffer(testData.collpasedSvg)
+    }));
+    stream.write(new gutil.File({
+        path: 'expanded.16x16.svg',
+        contents: new Buffer(testData.expandedSvg)
+    }));
+    stream.end();
+});
+
+it('should use dimensions from svg source', function (done) {
+    var stream = svgcss();
+
+    stream
+       .pipe(streamAssert.length(1))
+       .pipe(streamAssert.first(function (newFile) {
+           var fileContents = newFile.contents.toString();
+           // Check if rules are ok
+           var parsedCss = css.parse(fileContents);
+           assert.equal(parsedCss.stylesheet.rules.length, 1);
+           // Check dimensions
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '1234px');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '4321px');
+       }))
+       .pipe(streamAssert.end(done));
+
+    stream.write(new gutil.File({
+        path: 'customdimensions.svg',
+        contents: new Buffer(testData.customDimensions)
+    }));
+    stream.end();
+});
+
+
+it('should be able to change css file name', function (done) {
+    var stream = svgcss({
+        fileName: 'common'
     });
+
+    stream
+       .pipe(streamAssert.length(1))
+       .pipe(streamAssert.first(function (newFile) {
+           var fileContents = newFile.contents.toString();
+           assert.equal(newFile.basename, 'common.css');
+       }))
+       .pipe(streamAssert.end(done));
+
+    stream.write(new gutil.File({
+        path: 'collapsed.16x16.svg',
+        contents: new Buffer(testData.collpasedSvg)
+    }));
+    stream.end();
+});
+
+it('should be able to change css prefix', function (done) {
+    var stream = svgcss({
+        cssPrefix: 'icons-list-'
+    });
+
+    stream
+       .pipe(streamAssert.length(1))
+       .pipe(streamAssert.first(function (newFile) {
+           var fileContents = newFile.contents.toString();
+           // Check if rules are ok
+           var parsedCss = css.parse(fileContents);
+           assert.equal(parsedCss.stylesheet.rules.length, 1);
+           // No dots inside
+           assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icons-list-collapsed-16x16');
+       }))
+       .pipe(streamAssert.end(done));
+
+    stream.write(new gutil.File({
+        path: 'collapsed.16x16.svg',
+        contents: new Buffer(testData.collpasedSvg)
+    }));
+    stream.end();
+});
+
+it('should be able to change default height and width', function (done) {
+    var stream = svgcss({
+        defaultHeight: '32px',
+        defaultWidth: '32px'
+    });
+
+    stream
+       .pipe(streamAssert.length(1))
+       .pipe(streamAssert.first(function (newFile) {
+           var fileContents = newFile.contents.toString();
+           // Check if rules are ok
+           var parsedCss = css.parse(fileContents);
+           assert.equal(parsedCss.stylesheet.rules.length, 2);
+           // Check dimensions
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '32px');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '32px');
+           // Check dimensions
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].value, '1234px');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].value, '4321px');
+       }))
+       .pipe(streamAssert.end(done));
+
+    stream.write(new gutil.File({
+        path: 'nodimensions.svg',
+        contents: new Buffer(testData.noDimensions)
+    }));
+    stream.write(new gutil.File({
+        path: 'customdimensions.svg',
+        contents: new Buffer(testData.customDimensions)
+    }));
+    stream.end();
 });

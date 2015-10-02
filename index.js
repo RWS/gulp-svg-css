@@ -2,16 +2,24 @@
 var gutil = require('gulp-util');
 var through = require('through2');
 var path = require('path');
+var DOMParser = require('xmldom').DOMParser;
 
 module.exports = function (options) {
     options = options || {};
 
     // Init default options
-    if (typeof options.cssFileName === 'undefined') {
-        options.cssFileName = "icons";
+    if (!options.fileName) {
+        options.fileName = 'icons';
     }
-
-    var cssRules = [];
+    if (!options.cssPrefix) {
+        options.cssPrefix = 'icon-';
+    }
+    if (!options.defaultWidth) {
+        options.defaultWidth = '16px';
+    }
+    if (!options.defaultHeight) {
+        options.defaultHeight = '16px';
+    }
 
     /**
      * Returns encoded string of svg file.
@@ -37,12 +45,32 @@ module.exports = function (options) {
      * @method buildCssRule
      * @param {String} normalizedFileName rule for svg file.
      * @param {String} encodedSvg Encoded svg content.
+     * @param {String} width Image width.
+     * @param {String} height Image height.
      */
-    function buildCssRule(normalizedFileName, encodedSvg) {
-        return '.icon-' + normalizedFileName + ' {\n' +
+    function buildCssRule(normalizedFileName, encodedSvg, width, height) {
+        return '.' + options.cssPrefix + normalizedFileName + ' {\n' +
         '    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");\n' +
+        '    width: ' + width + ';\n' +
+        '    height: ' + height + ';\n' +
         '}\n'
     }
+
+    /**
+     * Get svg image dimensions.
+     * @method getDimensions
+     * @param {String} data Contents of svg file.
+     */
+    function getDimensions(svgContent) {
+        var doc = new DOMParser().parseFromString(svgContent, 'text/xml');
+        var svgel = doc.getElementsByTagName('svg')[0];
+        var width = svgel.getAttribute('width');
+        var height = svgel.getAttribute('height');
+
+        return { width: width, height: height }
+    }
+
+    var cssRules = [];
 
     return through.obj(function (file, enc, cb) {
         if (file.isNull()) {
@@ -65,13 +93,19 @@ module.exports = function (options) {
 
         // Encode svg data
         var encodedSvg = buildSvgDataURI(svgContent);
-        cssRules.push(buildCssRule(normalizedFileName, encodedSvg));
+
+        // Get dimensions
+        var dimensions = getDimensions(svgContent);
+       
+        // Push rule
+        cssRules.push(buildCssRule(normalizedFileName, encodedSvg,
+            dimensions.width || options.defaultWidth, dimensions.height || options.defaultHeight));
 
         // Don't pipe svg image
         cb();
     }, function (cb) {
         var cssFile = new gutil.File({
-            path: options.cssFileName + '.css',
+            path: options.fileName + '.css',
             contents: new Buffer(cssRules.join('\n'))
         });
         this.push(cssFile);
