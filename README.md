@@ -2,7 +2,7 @@
 
 Gulp plugin that embeds svg images inside a single CSS file using data-uri.
 
-# Usage
+## Usage
 
 Example usage of the plugin:
 
@@ -14,43 +14,48 @@ Example usage of the plugin:
         return gulp
             .src('icons/**/*.svg')
             .pipe(svgmin())
-            .pipe(svgcss())
+            .pipe(svgcss({ 
+                fileName: 'icons',
+                cssPrefix: 'icon-'
+            }))
             .pipe(gulp.dest('dist/'));
         });
     });
 
-# Options
+## API
 
-## options.fileName
+### svgcss(options)
+
+#### options.fileName
 Type: `String`
 Default value: `icons`
 
 Name of the target css file.
 
-## options.cssPrefix
+#### options.cssPrefix
 Type: `String`  
 Default value: `icon-`  
 
 A string to prefix all css classes with.
 
-## options.defaultWidth
+#### options.defaultWidth
 Type: `String`  
 Default: `"16px"`  
 
 A string that MUST be defined in px that will be the size of the background-image if there is no width given in the SVG element.
 
-## options.defaultHeight
+#### options.defaultHeight
 Type: `String`  
 Default: `"16px"`  
 
 Similar to defaultWidth, but for height.
 
-# Running tests
+## Running tests
 
     npm install
     npm test
 
-# License
+## License
 
 Copyright (c) 2015 All Rights Reserved by the SDL Group.
 
