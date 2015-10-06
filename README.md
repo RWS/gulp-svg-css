@@ -16,7 +16,8 @@ Example usage of the plugin:
             .pipe(svgmin())
             .pipe(svgcss({ 
                 fileName: 'icons',
-                cssPrefix: 'icon-'
+                cssPrefix: 'icon-',
+                addSize: false
             }))
             .pipe(gulp.dest('dist/'));
         });
@@ -33,20 +34,31 @@ Default value: `icons`
 Name of the target css file.
 
 #### options.cssPrefix
-Type: `String`  
-Default value: `icon-`  
+Type: `String`
+Default value: `icon-`
 
 A string to prefix all css classes with.
 
+#### options.addSize
+Type: `Boolean`
+Default value: `false`
+
+Adds width and height property to the css class.
+The size is retrieved using the width and height attribute on the svg root element. If no size is set the `options.defaultWidth` and `options.defaultHeight` will be used.
+
 #### options.defaultWidth
-Type: `String`  
-Default: `"16px"`  
+Type: `String`
+Default: `"16px"`
+
+Only used if `options.addSize` is true.
 
 A string that MUST be defined in px that will be the size of the background-image if there is no width given in the SVG element.
 
 #### options.defaultHeight
-Type: `String`  
-Default: `"16px"`  
+Type: `String`
+Default: `"16px"`
+
+Only used if `options.addSize` is true.
 
 Similar to defaultWidth, but for height.
 

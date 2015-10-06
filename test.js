@@ -23,9 +23,9 @@ var css = require('css');
 var testData = {
     collpasedSvg: fs.readFileSync(__dirname + '/testdata/collapsed.svg'),
     expandedSvg: fs.readFileSync(__dirname + '/testdata/expanded.svg'),
-    noDimensions: fs.readFileSync(__dirname + '/testdata/nodimensions.svg'),
-    customDimensions: fs.readFileSync(__dirname + '/testdata/customdimensions.svg'),
-    nopxInDimensions: fs.readFileSync(__dirname + '/testdata/nopxindimensions.svg')
+    noSize: fs.readFileSync(__dirname + '/testdata/nosize.svg'),
+    customSize: fs.readFileSync(__dirname + '/testdata/customsize.svg'),
+    nopxInSize: fs.readFileSync(__dirname + '/testdata/nopxinsize.svg')
 };
 
 it('should minify svg and output css file', function (done) {
@@ -36,7 +36,7 @@ it('should minify svg and output css file', function (done) {
         .pipe(streamAssert.first(function (newFile) {
             var fileContents = newFile.contents.toString();
             assert.equal(newFile.basename, 'icons.css');
-            assert.equal(newFile.contents.length, 1265);
+            assert.equal(newFile.contents.length, 1125);
             // Check if special characters are escaped
             assert.equal(fileContents.indexOf("<"), -1, "Contains < char");
             assert.equal(fileContents.indexOf(">"), -1, "Contains > char");
@@ -46,11 +46,9 @@ it('should minify svg and output css file', function (done) {
             assert.equal(parsedCss.stylesheet.rules.length, 2);
             // No dots inside
             assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-collapsed-16x16');
-            // Check dimensions
-            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
-            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '16px');
-            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
-            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '16px');
+            // Check size (should not be there as the default of addSize is false)
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[1], undefined);
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[1], undefined);
         }))
         .pipe(streamAssert.end(done));
 
@@ -65,8 +63,8 @@ it('should minify svg and output css file', function (done) {
     stream.end();
 });
 
-it('should use dimensions from svg source', function (done) {
-    var stream = svgcss();
+it('should use sizes from svg source', function (done) {
+    var stream = svgcss({ addSize: true });
 
     stream
        .pipe(streamAssert.length(1))
@@ -75,7 +73,7 @@ it('should use dimensions from svg source', function (done) {
            // Check if rules are ok
            var parsedCss = css.parse(fileContents);
            assert.equal(parsedCss.stylesheet.rules.length, 2);
-           // Check dimensions
+           // Check size
            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '1234px');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
@@ -88,12 +86,12 @@ it('should use dimensions from svg source', function (done) {
        .pipe(streamAssert.end(done));
 
     stream.write(new gutil.File({
-        path: 'customdimensions.svg',
-        contents: new Buffer(testData.customDimensions)
+        path: 'customsize.svg',
+        contents: new Buffer(testData.customSize)
     }));
     stream.write(new gutil.File({
-        path: 'nopxindimensions.svg',
-        contents: new Buffer(testData.nopxInDimensions)
+        path: 'nopxinsize.svg',
+        contents: new Buffer(testData.nopxInSize)
     }));
     stream.end();
 });
@@ -145,6 +143,7 @@ it('should be able to change css prefix', function (done) {
 
 it('should be able to change default height and width', function (done) {
     var stream = svgcss({
+        addSize: true,
         defaultHeight: '32px',
         defaultWidth: '32px'
     });
@@ -156,12 +155,12 @@ it('should be able to change default height and width', function (done) {
            // Check if rules are ok
            var parsedCss = css.parse(fileContents);
            assert.equal(parsedCss.stylesheet.rules.length, 2);
-           // Check dimensions
+           // Check size
            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '32px');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
            assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '32px');
-           // Check dimensions
+           // Check size
            assert.equal(parsedCss.stylesheet.rules[1].declarations[1].property, 'width');
            assert.equal(parsedCss.stylesheet.rules[1].declarations[1].value, '1234px');
            assert.equal(parsedCss.stylesheet.rules[1].declarations[2].property, 'height');
@@ -170,12 +169,12 @@ it('should be able to change default height and width', function (done) {
        .pipe(streamAssert.end(done));
 
     stream.write(new gutil.File({
-        path: 'nodimensions.svg',
-        contents: new Buffer(testData.noDimensions)
+        path: 'nosize.svg',
+        contents: new Buffer(testData.noSize)
     }));
     stream.write(new gutil.File({
-        path: 'customdimensions.svg',
-        contents: new Buffer(testData.customDimensions)
+        path: 'customsize.svg',
+        contents: new Buffer(testData.customSize)
     }));
     stream.end();
 });

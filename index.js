@@ -29,6 +29,9 @@ module.exports = function (options) {
     if (!options.cssPrefix) {
         options.cssPrefix = 'icon-';
     }
+    if (!options.addSize) {
+        options.addSize = false;
+    }
     if (!options.defaultWidth) {
         options.defaultWidth = '16px';
     }
@@ -64,12 +67,15 @@ module.exports = function (options) {
      * @param {String} height Image height.
      */
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
-        return '.' + options.cssPrefix + normalizedFileName + ' {\n' +
-        '    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");\n' +
-        '    width: ' + width + ';\n' +
-        '    height: ' + height + ';\n' +
-        '    background-repeat: no-repeat;\n' +
-        '}\n'
+        var cssRule = [];
+        cssRule.push('.' + options.cssPrefix + normalizedFileName + ' {');
+        cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+        if (options.addSize) {
+            cssRule.push('    width: ' + width + ';');
+            cssRule.push('    height: ' + height + ';');
+        }
+        cssRule.push('}');
+        return cssRule.join('\n');
     }
 
     /**
@@ -91,7 +97,7 @@ module.exports = function (options) {
             height = height + 'px';
         }
 
-        return { width: width, height: height }
+        return { width: width, height: height };
     }
 
     var cssRules = [];
@@ -120,7 +126,7 @@ module.exports = function (options) {
 
         // Get dimensions
         var dimensions = getDimensions(svgContent);
-       
+
         // Push rule
         cssRules.push(buildCssRule(normalizedFileName, encodedSvg,
             dimensions.width || options.defaultWidth, dimensions.height || options.defaultHeight));
