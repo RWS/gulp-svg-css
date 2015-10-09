@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://stash.sdl.com/scm/~jbevers/gulp-svg-css.git"
+    "url": "https://github.com/sdl/gulp-svg-css.git"
   },
   "keywords": [
     "gulpplugin",
