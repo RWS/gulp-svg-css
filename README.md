@@ -1,4 +1,8 @@
-# gulp-svg-css
+# gulp-svg-css 
+[![Build Status](https://travis-ci.org/sdl/gulp-svg-css.svg?branch=master)](https://travis-ci.org/sdl/gulp-svg-css)
+[![npm version](https://badge.fury.io/js/gulp-svg-css.svg)](https://badge.fury.io/js/gulp-svg-css)
+[![Dependency Status](https://david-dm.org/sdl/gulp-svg-css.svg)](https://david-dm.org/sdl/gulp-svg-css)
+[![devDependency Status](https://david-dm.org/sdl/gulp-svg-css/dev-status.svg)](https://david-dm.org/sdl/gulp-svg-css#info=devDependencies)
 
 Gulp plugin that embeds svg images inside a single CSS file using data-uri.
 
