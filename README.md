@@ -37,6 +37,12 @@ Default value: `icons`
 
 Name of the target css file.
 
+#### options.fileExt
+Type: `String`
+Default value: `css`
+
+File extension of the target file.
+
 #### options.cssPrefix
 Type: `String`
 Default value: `icon-`

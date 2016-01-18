@@ -117,6 +117,26 @@ it('should be able to change css file name', function (done) {
     stream.end();
 });
 
+it('should be able to change the file extension', function (done) {
+    var stream = svgcss({
+        fileExt: 'scss'
+    });
+
+    stream
+       .pipe(streamAssert.length(1))
+       .pipe(streamAssert.first(function (newFile) {
+           var fileContents = newFile.contents.toString();
+           assert.equal(newFile.basename, 'icons.scss');
+       }))
+       .pipe(streamAssert.end(done));
+
+    stream.write(new gutil.File({
+        path: 'collapsed.16x16.svg',
+        contents: new Buffer(testData.collpasedSvg)
+    }));
+    stream.end();
+});
+
 it('should be able to change css prefix', function (done) {
     var stream = svgcss({
         cssPrefix: 'icons-list-'
