@@ -38,6 +38,9 @@ module.exports = function (options) {
     if (!options.defaultHeight) {
         options.defaultHeight = '16px';
     }
+    if (!options.fileExt) {
+        options.fileExt = 'css';
+    }
 
     /**
      * Returns encoded string of svg file.
@@ -135,7 +138,7 @@ module.exports = function (options) {
         cb();
     }, function (cb) {
         var cssFile = new gutil.File({
-            path: options.fileName + '.css',
+            path: options.fileName + '.' + options.fileExt,
             contents: new Buffer(cssRules.join('\n'))
         });
         this.push(cssFile);
