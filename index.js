@@ -29,6 +29,9 @@ module.exports = function (options) {
     if (!options.cssPrefix) {
         options.cssPrefix = 'icon-';
     }
+    if (!options.cssSelector) {
+        options.cssSelector = '.';
+    }
     if (!options.addSize) {
         options.addSize = false;
     }
@@ -71,7 +74,7 @@ module.exports = function (options) {
      */
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
         var cssRule = [];
-        cssRule.push('.' + options.cssPrefix + normalizedFileName + ' {');
+        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ' {');
         cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
         if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
