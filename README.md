@@ -1,4 +1,4 @@
-# gulp-svg-css 
+# gulp-svg-css
 [![Build Status](https://travis-ci.org/sdl/gulp-svg-css.svg?branch=master)](https://travis-ci.org/sdl/gulp-svg-css)
 [![npm version](https://badge.fury.io/js/gulp-svg-css.svg)](https://badge.fury.io/js/gulp-svg-css)
 [![Dependency Status](https://david-dm.org/sdl/gulp-svg-css.svg)](https://david-dm.org/sdl/gulp-svg-css)
@@ -18,7 +18,7 @@ Example usage of the plugin:
         return gulp
             .src('icons/**/*.svg')
             .pipe(svgmin())
-            .pipe(svgcss({ 
+            .pipe(svgcss({
                 fileName: 'icons',
                 cssPrefix: 'icon-',
                 addSize: false
@@ -48,6 +48,12 @@ Type: `String`
 Default value: `icon-`
 
 A string to prefix all css classes with.
+
+#### options.cssSelector
+Type: `String`
+Default value: `.`
+
+A selector to use for the CSS prefix. This is particularly useful if you're outputting a SASS partial, and would rather use a `%` placeholder selector.
 
 #### options.addSize
 Type: `Boolean`
