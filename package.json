@@ -1,10 +1,11 @@
 {
   "name": "gulp-svg-css",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Gulp plugin that embeds svg images inside a single CSS file using data-uri.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "_mocha",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -24,12 +25,13 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "css": "^2.2.1",
+    "istanbul": "^0.4.3",
     "mocha": "*",
     "stream-assert": "^2.0.3"
   },
   "dependencies": {
-    "gulp-util": "^3.0.6",
-    "through2": "^2.0.0",
-    "xmldom": "^0.1.19"
+    "gulp-util": "^3.0.7",
+    "through2": "^2.0.1",
+    "xmldom": "^0.1.22"
   }
 }
