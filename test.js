@@ -1,14 +1,14 @@
 /*!
  * Copyright (c) 2015 All Rights Reserved by the SDL Group.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an 'AS IS' BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -38,9 +38,9 @@ it('should minify svg and output css file', function (done) {
             assert.equal(newFile.basename, 'icons.css');
             assert.equal(newFile.contents.length, 1125);
             // Check if special characters are escaped
-            assert.equal(fileContents.indexOf("<"), -1, "Contains < char");
-            assert.equal(fileContents.indexOf(">"), -1, "Contains > char");
-            assert.equal(fileContents.indexOf("#"), -1, "Contains # char");
+            assert.equal(fileContents.indexOf('<'), -1, 'Contains < char');
+            assert.equal(fileContents.indexOf('>'), -1, 'Contains > char');
+            assert.equal(fileContents.indexOf('#'), -1, 'Contains # char');
             // Check if rules are ok
             var parsedCss = css.parse(fileContents);
             assert.equal(parsedCss.stylesheet.rules.length, 2);
@@ -105,7 +105,6 @@ it('should be able to change css file name', function (done) {
     stream
        .pipe(streamAssert.length(1))
        .pipe(streamAssert.first(function (newFile) {
-           var fileContents = newFile.contents.toString();
            assert.equal(newFile.basename, 'common.css');
        }))
        .pipe(streamAssert.end(done));
@@ -125,7 +124,6 @@ it('should be able to change the file extension', function (done) {
     stream
        .pipe(streamAssert.length(1))
        .pipe(streamAssert.first(function (newFile) {
-           var fileContents = newFile.contents.toString();
            assert.equal(newFile.basename, 'icons.scss');
        }))
        .pipe(streamAssert.end(done));
