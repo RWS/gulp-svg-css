@@ -83,6 +83,11 @@ Similar to defaultWidth, but for height.
 
     npm install
     npm test
+    
+## Check code style
+
+    npm install
+    npm run lint
 
 ## License
 

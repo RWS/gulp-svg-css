@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "_mocha",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha test.js"
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha test.js",
+    "lint": "eslint *.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "css": "^2.2.1",
+    "eslint": "^2.11.0",
     "istanbul": "^0.4.3",
     "mocha": "*",
     "stream-assert": "^2.0.3"
