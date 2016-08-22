@@ -25,7 +25,8 @@ var testData = {
     expandedSvg: fs.readFileSync(__dirname + '/testdata/expanded.svg'),
     noSize: fs.readFileSync(__dirname + '/testdata/nosize.svg'),
     customSize: fs.readFileSync(__dirname + '/testdata/customsize.svg'),
-    nopxInSize: fs.readFileSync(__dirname + '/testdata/nopxinsize.svg')
+    nopxInSize: fs.readFileSync(__dirname + '/testdata/nopxinsize.svg'),
+    nameWithDotsAndSpaces: fs.readFileSync(__dirname + '/testdata/name.with.dots and spaces.svg')
 };
 
 it('should minify svg and output css file', function (done) {
@@ -193,6 +194,28 @@ it('should be able to change default height and width', function (done) {
     stream.write(new gutil.File({
         path: 'customsize.svg',
         contents: new Buffer(testData.customSize)
+    }));
+    stream.end();
+});
+
+it('creates a proper css clas from the file name', function (done) {
+    var stream = svgcss();
+
+    stream
+       .pipe(streamAssert.length(1))
+       .pipe(streamAssert.first(function (newFile) {
+           var fileContents = newFile.contents.toString();
+           // Check if rules are ok
+           var parsedCss = css.parse(fileContents);
+           assert.equal(parsedCss.stylesheet.rules.length, 1);
+           // No dots or spaces inside the class name
+           assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-name-with-dots-and-spaces');
+       }))
+       .pipe(streamAssert.end(done));
+
+    stream.write(new gutil.File({
+        path: 'name.with.dots and spaces.svg',
+        contents: new Buffer(testData.nameWithDotsAndSpaces)
     }));
     stream.end();
 });
