@@ -124,8 +124,8 @@ module.exports = function (options) {
         // Put it inside a css file
         var normalizedFileName = path.normalize(path.basename(file.path, '.svg')).toLowerCase();
 
-        // Replace dots with hypens inside file name
-        normalizedFileName = normalizedFileName.replace(/\./gi, '-');
+        // Replace dots / spaces with hypens inside file name
+        normalizedFileName = normalizedFileName.replace(/(\.|\s)/gi, '-');
 
         // Encode svg data
         var encodedSvg = buildSvgDataURI(svgContent);
