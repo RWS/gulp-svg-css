@@ -171,26 +171,6 @@ it('should be able to change default height and width', function (done) {
     stream.end();
 });
 
-it('should be able to modify background-repeat', function(done){
-    var stream = svgcss({
-        backgroundRepeat: 'no-repeat'
-    });
-
-    stream
-       .pipe(streamAssert.length(1))
-       .pipe(streamAssert.first(function (newFile) {
-           var fileContents = newFile.contents.toString();
-           // Check if rules are ok
-           var parsedCss = css.parse(fileContents);
-           assert.equal(parsedCss.stylesheet.rules.length, 1);
-           console.log(parsedCss.stylesheet.rules[0].declarations);
-       }))
-       .pipe(streamAssert.end(done));
-
-    writeSVG(stream, 'collapsed.16x16.svg', testData.collapsedSvg);
-    stream.end();
-});
-
 it('creates a proper css clas from the file name', function (done) {
     var stream = svgcss();
 
