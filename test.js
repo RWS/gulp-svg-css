@@ -21,7 +21,7 @@ var gutil = require('gulp-util');
 var svgcss = require('./');
 var css = require('css');
 var testData = {
-    collpasedSvg: fs.readFileSync(__dirname + '/testdata/collapsed.svg'),
+    collapsedSvg: fs.readFileSync(__dirname + '/testdata/collapsed.svg'),
     expandedSvg: fs.readFileSync(__dirname + '/testdata/expanded.svg'),
     noSize: fs.readFileSync(__dirname + '/testdata/nosize.svg'),
     customSize: fs.readFileSync(__dirname + '/testdata/customsize.svg'),
@@ -53,14 +53,8 @@ it('should minify svg and output css file', function (done) {
         }))
         .pipe(streamAssert.end(done));
 
-    stream.write(new gutil.File({
-        path: 'collapsed.16x16.svg',
-        contents: new Buffer(testData.collpasedSvg)
-    }));
-    stream.write(new gutil.File({
-        path: 'expanded.16x16.svg',
-        contents: new Buffer(testData.expandedSvg)
-    }));
+    writeSVG(stream, 'collapsed.16x16.svg', testData.collapsedSvg);
+    writeSVG(stream, 'expanded.16x16.svg', testData.expandedSvg);
     stream.end();
 });
 
@@ -86,14 +80,8 @@ it('should use sizes from svg source', function (done) {
        }))
        .pipe(streamAssert.end(done));
 
-    stream.write(new gutil.File({
-        path: 'customsize.svg',
-        contents: new Buffer(testData.customSize)
-    }));
-    stream.write(new gutil.File({
-        path: 'nopxinsize.svg',
-        contents: new Buffer(testData.nopxInSize)
-    }));
+    writeSVG(stream, 'customsize.svg', testData.customSize);
+    writeSVG(stream, 'nopxinsize.svg', testData.nopxInSize);
     stream.end();
 });
 
@@ -110,10 +98,7 @@ it('should be able to change css file name', function (done) {
        }))
        .pipe(streamAssert.end(done));
 
-    stream.write(new gutil.File({
-        path: 'collapsed.16x16.svg',
-        contents: new Buffer(testData.collpasedSvg)
-    }));
+    writeSVG(stream, 'collapsed.16x16.svg', testData.collapsedSvg);
     stream.end();
 });
 
@@ -129,10 +114,7 @@ it('should be able to change the file extension', function (done) {
        }))
        .pipe(streamAssert.end(done));
 
-    stream.write(new gutil.File({
-        path: 'collapsed.16x16.svg',
-        contents: new Buffer(testData.collpasedSvg)
-    }));
+    writeSVG(stream, 'collapsed.16x16.svg', testData.collapsedSvg);
     stream.end();
 });
 
@@ -153,10 +135,7 @@ it('should be able to change css prefix', function (done) {
        }))
        .pipe(streamAssert.end(done));
 
-    stream.write(new gutil.File({
-        path: 'collapsed.16x16.svg',
-        contents: new Buffer(testData.collpasedSvg)
-    }));
+    writeSVG(stream, 'collapsed.16x16.svg', testData.collapsedSvg);
     stream.end();
 });
 
@@ -187,14 +166,38 @@ it('should be able to change default height and width', function (done) {
        }))
        .pipe(streamAssert.end(done));
 
-    stream.write(new gutil.File({
-        path: 'nosize.svg',
-        contents: new Buffer(testData.noSize)
-    }));
-    stream.write(new gutil.File({
-        path: 'customsize.svg',
-        contents: new Buffer(testData.customSize)
-    }));
+    writeSVG(stream, 'nosize.svg', testData.noSize);
+    writeSVG(stream, 'customsize.svg', testData.customSize);
+    stream.end();
+});
+
+it('should be able to modify background-repeat', function(done){
+    var stream = svgcss({
+        backgroundRepeat: 'no-repeat'
+    });
+
+    stream
+       .pipe(streamAssert.length(1))
+       .pipe(streamAssert.first(function (newFile) {
+           var fileContents = newFile.contents.toString();
+           // Check if rules are ok
+           var parsedCss = css.parse(fileContents);
+           assert.equal(parsedCss.stylesheet.rules.length, 1);
+           var declarations = parsedCss.stylesheet.rules[0].declarations;
+           var cssRule = null;
+           
+           //find the background-repeat css rule
+           for (var i=0; i < declarations.length; i ++){
+               if (declarations[i] && declarations[i].property === "background-repeat"){
+                   cssRule = declarations[i];
+               }
+           }
+           assert(cssRule);
+           assert.equal(cssRule.value, "no-repeat");
+       }))
+       .pipe(streamAssert.end(done));
+
+    writeSVG(stream, 'collapsed.16x16.svg', testData.collapsedSvg);
     stream.end();
 });
 
@@ -213,9 +216,13 @@ it('creates a proper css clas from the file name', function (done) {
        }))
        .pipe(streamAssert.end(done));
 
-    stream.write(new gutil.File({
-        path: 'name.with.dots and spaces.svg',
-        contents: new Buffer(testData.nameWithDotsAndSpaces)
-    }));
+    writeSVG(stream, 'name.with.dots and spaces.svg', testData.nameWithDotsAndSpaces);
     stream.end();
 });
+
+function writeSVG(stream, path, data){
+    stream.write(new gutil.File({
+        path: path,
+        contents: new Buffer(data)
+    }));
+}
