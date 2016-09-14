@@ -61,6 +61,7 @@ module.exports = function (options) {
             .replace(/</gmi, '%3C') // <
             .replace(/>/gmi, '%3E') // >
             .replace(/#/gmi, '%23') // #
+            .replace(/\s/g, '%20')// empty space, sorry, there is no mocha test for this
             .replace(/\"/gmi, '\''); // "
     }
 
