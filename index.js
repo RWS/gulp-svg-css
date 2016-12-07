@@ -80,6 +80,9 @@ module.exports = function (options) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
         }
+        if (options.backgroundRepeat) {
+            cssRule.push('    background-repeat: ' + options.backgroundRepeat + ';');
+        }
         cssRule.push('}');
         return cssRule.join('\n');
     }

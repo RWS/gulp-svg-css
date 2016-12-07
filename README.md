@@ -81,6 +81,12 @@ Only used if `options.addSize` is true.
 
 Similar to defaultWidth, but for height.
 
+#### options.backgroundRepeat
+Type: `String`
+Default: none
+
+Will add a css rule for "background-repeat". Will only add the rule if it is provided.
+
 ## Running tests
 
     npm install
