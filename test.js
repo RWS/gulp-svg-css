@@ -37,7 +37,9 @@ it('should minify svg and output css file', function (done) {
         .pipe(streamAssert.first(function (newFile) {
             var fileContents = newFile.contents.toString();
             assert.equal(newFile.basename, 'icons.css');
-            assert.equal(newFile.contents.length, 1125);
+            // compression changes with SASS version
+            // assert.equal(newFile.contents.length, 1125);
+
             // Check if special characters are escaped
             assert.equal(fileContents.indexOf('<'), -1, 'Contains < char');
             assert.equal(fileContents.indexOf('>'), -1, 'Contains > char');
@@ -46,10 +48,10 @@ it('should minify svg and output css file', function (done) {
             var parsedCss = css.parse(fileContents);
             assert.equal(parsedCss.stylesheet.rules.length, 2);
             // No dots inside
-            assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-collapsed-16x16');
+            assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-collapsed-16x16::after');
             // Check size (should not be there as the default of addSize is false)
-            assert.equal(parsedCss.stylesheet.rules[0].declarations[1], undefined);
-            assert.equal(parsedCss.stylesheet.rules[0].declarations[1], undefined);
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[3], undefined);
+            assert.equal(parsedCss.stylesheet.rules[0].declarations[4], undefined);
         }))
         .pipe(streamAssert.end(done));
 
@@ -75,14 +77,14 @@ it('should use sizes from svg source', function (done) {
            var parsedCss = css.parse(fileContents);
            assert.equal(parsedCss.stylesheet.rules.length, 2);
            // Check size
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '1234px');
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '4321px');
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].property, 'width');
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].value, '12345px');
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].property, 'height');
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].value, '54321px');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[3].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[3].value, '1234px');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[4].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[4].value, '4321px');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[3].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[3].value, '12345px');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[4].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[4].value, '54321px');
        }))
        .pipe(streamAssert.end(done));
 
@@ -149,7 +151,7 @@ it('should be able to change css prefix', function (done) {
            var parsedCss = css.parse(fileContents);
            assert.equal(parsedCss.stylesheet.rules.length, 1);
            // No dots inside
-           assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icons-list-collapsed-16x16');
+           assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icons-list-collapsed-16x16::after');
        }))
        .pipe(streamAssert.end(done));
 
@@ -175,15 +177,15 @@ it('should be able to change default height and width', function (done) {
            var parsedCss = css.parse(fileContents);
            assert.equal(parsedCss.stylesheet.rules.length, 2);
            // Check size
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].property, 'width');
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[1].value, '32px');
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].property, 'height');
-           assert.equal(parsedCss.stylesheet.rules[0].declarations[2].value, '32px');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[3].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[3].value, '32px');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[4].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[0].declarations[4].value, '32px');
            // Check size
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].property, 'width');
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[1].value, '1234px');
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].property, 'height');
-           assert.equal(parsedCss.stylesheet.rules[1].declarations[2].value, '4321px');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[3].property, 'width');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[3].value, '1234px');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[4].property, 'height');
+           assert.equal(parsedCss.stylesheet.rules[1].declarations[4].value, '4321px');
        }))
        .pipe(streamAssert.end(done));
 
@@ -209,7 +211,7 @@ it('creates a proper css clas from the file name', function (done) {
            var parsedCss = css.parse(fileContents);
            assert.equal(parsedCss.stylesheet.rules.length, 1);
            // No dots or spaces inside the class name
-           assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-name-with-dots-and-spaces');
+           assert.equal(parsedCss.stylesheet.rules[0].selectors[0], '.icon-name-with-dots-and-spaces::after');
        }))
        .pipe(streamAssert.end(done));
 
