@@ -74,9 +74,8 @@ module.exports = function (options) {
      */
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
         var cssRule = [];
-        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '::after {');
-        cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
-        cssRule.push('    content: "";');
+        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '::before {');
+        cssRule.push('    content: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
         cssRule.push('    display: "inline-block";');
 
         if (options.addSize) {
