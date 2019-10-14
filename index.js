@@ -75,8 +75,17 @@ module.exports = function (options) {
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
         var cssRule = [];
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ' {');
-        cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
-        if (options.addSize) {
+        
+	if (options.background || !options.mask) {
+            cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+        }
+
+        if (options.mask) {
+            cssRule.push('    -webkit-mask-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+            cssRule.push('    mask-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+        }
+
+	if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
         }
