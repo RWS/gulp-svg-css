@@ -23,25 +23,25 @@ module.exports = function (options) {
     options = options || {};
 
     // Init default options
-    if (!options.fileName) {
+    if (options.fileName == null) { // == null is true for null and undefined, but not empty string.
         options.fileName = 'icons';
     }
-    if (!options.cssPrefix) {
+    if (options.cssPrefix == null) {
         options.cssPrefix = 'icon-';
     }
-    if (!options.cssSelector) {
+    if (options.cssSelector == null) {
         options.cssSelector = '.';
     }
     if (!options.addSize) {
         options.addSize = false;
     }
-    if (!options.defaultWidth) {
+    if (!options.defaultWidth) { // empty string not allowed
         options.defaultWidth = '16px';
     }
-    if (!options.defaultHeight) {
+    if (!options.defaultHeight) { // empty string not allowed
         options.defaultHeight = '16px';
     }
-    if (!options.fileExt) {
+    if (options.fileExt == null) {
         options.fileExt = 'css';
     }
 
@@ -61,7 +61,7 @@ module.exports = function (options) {
             .replace(/</gmi, '%3C') // <
             .replace(/>/gmi, '%3E') // >
             .replace(/#/gmi, '%23') // #
-            .replace(/\"/gmi, '\''); // "
+            .replace(/\"/gmi, '\''); // " (replace double-quotes with single-quotes)
     }
 
     /**
@@ -75,7 +75,7 @@ module.exports = function (options) {
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
         var cssRule = [];
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ' {');
-        cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+        cssRule.push('    background-image: url("data:image/svg+xml,' + encodedSvg + '");');
         if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
