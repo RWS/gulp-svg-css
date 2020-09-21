@@ -21,14 +21,51 @@ gulp.task('create-css', function () {
 		.src('icons/**/*.svg')
 		.pipe(svgmin())
 		.pipe(svgcss({
-			fileName: 'icons',
-			cssPrefix: 'icon-',
-			addSize: false
+			cssPrefix: '',
+			cssProperty: '--img'
 		}))
 		.pipe(gulp.dest('dist/'));
 	});
 });
 ```
+
+For example, your initial .css file might look like this before processing:
+```css
+.cssimg {
+    display: inline-block;
+    --size: 32px;
+    width: var(--size);
+    height: var(--size);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+    background-color: #9f9697;
+    -webkit-mask-image: var(--img);
+    mask-image: var(--img);
+}
+
+.ban {
+    --img: url(../img/ban.svg);
+}
+
+.bars {
+    --img: url(../img/bars.svg);
+}
+```
+
+After processing, this is added to the end of the .css file:
+```css
+
+.ban {
+    --img: url("data:image/svg+xml,%3Csvg viewBox='0 0 1792 1792' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='red' d='M1440 893q0-161-87-295l-754 753q137 89 297 89 111 0 211.5-43.5T1281 1280t116-174.5 43-212.5zm-999 299l755-754q-135-91-300-91-148 0-273 73T425 619t-73 274q0 162 89 299zm1223-299q0 157-61 300t-163.5 246-245 164-298.5 61-298.5-61-245-164T189 1193t-61-300 61-299.5T352.5 348t245-164T896 123t298.5 61 245 164T1603 593.5t61 299.5z'/%3E%3C/svg%3E")
+}
+
+.bars {
+    --img: url("data:image/svg+xml,%3Csvg viewBox='0 0 1792 1792' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%239f9697' d='M1664 1344v128q0 26-19 45t-45 19H192q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19H192q-26 0-45-19t-19-45V832q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19H192q-26 0-45-19t-19-45V320q0-26 19-45t45-19h1408q26 0 45 19t19 45z'/%3E%3C/svg%3E")
+}
+```
+
 
 ## API
 
@@ -57,6 +94,12 @@ Type: `String`
 Default value: `.`
 
 A selector to use for the CSS prefix. This is particularly useful if you're outputting a SASS partial, and would rather use a `%` placeholder selector.
+
+#### options.cssProperty
+Type: `String`
+Default value: `background-image`
+
+The CSS property to write. Typically used background-image: or --img:
 
 #### options.addSize
 Type: `Boolean`

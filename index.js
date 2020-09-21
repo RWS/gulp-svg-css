@@ -13,42 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// @ts-check
 'use strict';
+
 var gutil = require('gulp-util');
 var through = require('through2');
 var path = require('path');
 var DOMParser = require('xmldom').DOMParser;
 
-module.exports = function (options) {
+/**
+ * @typedef {Object} gulp_svg_css_options
+ * @property {string=} fileName
+ * @property {string=} cssPrefix
+ * @property {string=} cssSelector
+ * @property {string=} cssProperty
+ * @property {boolean=} addSize
+ * @property {string=} defaultWidth
+ * @property {string=} defaultHeight
+ * @property {string=} fileExt
+ * 
+ * @param {?gulp_svg_css_options=} options 
+ */
+function gulp_svg_css(options) {
     options = options || {};
 
     // Init default options
-    if (!options.fileName) {
+    if (options.fileName == null) { // == null is true for null and undefined, but not empty string.
         options.fileName = 'icons';
     }
-    if (!options.cssPrefix) {
+    if (options.cssPrefix == null) {
         options.cssPrefix = 'icon-';
     }
-    if (!options.cssSelector) {
+    if (options.cssSelector == null) {
         options.cssSelector = '.';
+    }
+    if (!options.cssProperty == null) {
+        options.cssProperty = 'background-image';
     }
     if (!options.addSize) {
         options.addSize = false;
     }
-    if (!options.defaultWidth) {
+    if (!options.defaultWidth) { // empty string not allowed
         options.defaultWidth = '16px';
     }
-    if (!options.defaultHeight) {
+    if (!options.defaultHeight) { // empty string not allowed
         options.defaultHeight = '16px';
     }
-    if (!options.fileExt) {
+    if (options.fileExt == null) {
         options.fileExt = 'css';
     }
 
     /**
      * Returns encoded string of svg file.
      * @method buildSvgDataURI
-     * @param {String} data Contents of svg file.
+     * @param {String} svgContent Contents of svg file.
      */
     function buildSvgDataURI(svgContent) {
         return svgContent
@@ -61,7 +79,7 @@ module.exports = function (options) {
             .replace(/</gmi, '%3C') // <
             .replace(/>/gmi, '%3E') // >
             .replace(/#/gmi, '%23') // #
-            .replace(/\"/gmi, '\''); // "
+            .replace(/\"/gmi, '\''); // " (replace double-quotes with single-quotes)
     }
 
     /**
@@ -75,7 +93,7 @@ module.exports = function (options) {
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
         var cssRule = [];
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ' {');
-        cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+        cssRule.push('    ' + options.cssProperty + ': url("data:image/svg+xml,' + encodedSvg + '");');
         if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
@@ -87,7 +105,7 @@ module.exports = function (options) {
     /**
      * Get svg image dimensions.
      * @method getDimensions
-     * @param {String} data Contents of svg file.
+     * @param {String} svgContent Contents of svg file.
      */
     function getDimensions(svgContent) {
         var doc = new DOMParser().parseFromString(svgContent, 'text/xml');
@@ -148,3 +166,5 @@ module.exports = function (options) {
         cb();
     });
 };
+
+module.exports = gulp_svg_css;
