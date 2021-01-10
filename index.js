@@ -76,16 +76,15 @@ module.exports = function (options) {
         var cssRule = [];
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ',' +
             options.cssSelector + options.cssPrefix + normalizedFileName + '-before::before' + ',' +
-            options.cssSelector + options.cssPrefix + normalizedFileName + '-after::after' + '{')
-        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ' {');
+            options.cssSelector + options.cssPrefix + normalizedFileName + '-after::after' + '{');
         cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
         cssRule.push('}');
-        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '{')
         if (options.addSize) {
+            cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '{')
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
+            cssRule.push('}');
         }
-        cssRule.push('}');
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '-before::before' + ' {');
         cssRule.push('    content:\'\';');
         if (options.addSize) {
