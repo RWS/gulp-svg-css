@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/sdl/gulp-svg-css/badge.svg?branch=master)](https://coveralls.io/github/budfy/gulp-svg-css-pseudo?branch=master)
 [![npm version](https://badge.fury.io/js/gulp-svg-css.svg)](https://badge.fury.io/js/gulp-svg-css-pseudo)
 [![Dependency Status](https://david-dm.org/sdl/gulp-svg-css.svg)](https://david-dm.org/budfy/gulp-svg-css-pseudo)
-[![devDependency Status](https://david-dm.org/sdl/gulp-svg-css/dev-status.svg)](https://david-dm.org/budfy/gulp-svg-css-pseudo#info=devDependencies)
+[![devDependency Status](https://david-dm.org/budfy/gulp-svg-css-pseudo/dev-status.svg)](https://david-dm.org/budfy/gulp-svg-css-pseudo#info=devDependencies)
 
 Gulp plugin that embeds svg images inside a single CSS file using data-uri.
 
