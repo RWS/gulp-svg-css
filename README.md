@@ -1,9 +1,7 @@
-# gulp-svg-css
-[![Build Status](https://travis-ci.org/sdl/gulp-svg-css.svg?branch=master)](https://travis-ci.org/sdl/gulp-svg-css)
-[![Coverage Status](https://coveralls.io/repos/github/sdl/gulp-svg-css/badge.svg?branch=master)](https://coveralls.io/github/sdl/gulp-svg-css?branch=master)
-[![npm version](https://badge.fury.io/js/gulp-svg-css.svg)](https://badge.fury.io/js/gulp-svg-css)
-[![Dependency Status](https://david-dm.org/sdl/gulp-svg-css.svg)](https://david-dm.org/sdl/gulp-svg-css)
-[![devDependency Status](https://david-dm.org/sdl/gulp-svg-css/dev-status.svg)](https://david-dm.org/sdl/gulp-svg-css#info=devDependencies)
+# gulp-svg-css-pseudo
+[![npm version](https://badge.fury.io/js/gulp-svg-css-pseudo.svg)](https://badge.fury.io/js/gulp-svg-css-pseudo)
+[![Dependency Status](https://david-dm.org/budfy/gulp-svg-css-pseudo.svg)](https://david-dm.org/budfy/gulp-svg-css-pseudo)
+[![devDependency Status](https://david-dm.org/budfy/gulp-svg-css-pseudo/dev-status.svg)](https://david-dm.org/budfy/gulp-svg-css-pseudo#info=devDependencies)
 
 Gulp plugin that embeds svg images inside a single CSS file using data-uri.
 
@@ -93,7 +91,7 @@ Similar to defaultWidth, but for height.
 
 ## License
 
-Copyright (c) 2015 All Rights Reserved by the SDL Group.
+Copyright (c) 2021 All Rights Reserved by the SDL Group.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

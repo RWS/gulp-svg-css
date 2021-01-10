@@ -74,8 +74,26 @@ module.exports = function (options) {
      */
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
         var cssRule = [];
-        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ' {');
+        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ',' +
+            options.cssSelector + options.cssPrefix + normalizedFileName + '-before::before' + ',' +
+            options.cssSelector + options.cssPrefix + normalizedFileName + '-after::after' + '{');
         cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+        cssRule.push('}');
+        if (options.addSize) {
+            cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '{')
+            cssRule.push('    width: ' + width + ';');
+            cssRule.push('    height: ' + height + ';');
+            cssRule.push('}');
+        }
+        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '-before::before' + ' {');
+        cssRule.push('    content:\'\';');
+        if (options.addSize) {
+            cssRule.push('    width: ' + width + ';');
+            cssRule.push('    height: ' + height + ';');
+        }
+        cssRule.push('}');
+        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '-after::after' + ' {');
+        cssRule.push('    content:\'\';');
         if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
@@ -103,7 +121,10 @@ module.exports = function (options) {
             height = height + 'px';
         }
 
-        return { width: width, height: height };
+        return {
+            width: width,
+            height: height
+        };
     }
 
     var cssRules = [];
