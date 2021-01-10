@@ -74,8 +74,13 @@ module.exports = function (options) {
      */
     function buildCssRule(normalizedFileName, encodedSvg, width, height) {
         var cssRule = [];
+        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ',' +
+            options.cssSelector + options.cssPrefix + normalizedFileName + '-before::before' + ',' +
+            options.cssSelector + options.cssPrefix + normalizedFileName + '-after::after' + '{')
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + ' {');
         cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
+        cssRule.push('}');
+        cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '{')
         if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
@@ -83,10 +88,6 @@ module.exports = function (options) {
         cssRule.push('}');
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '-before::before' + ' {');
         cssRule.push('    content:\'\';');
-        cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
-        cssRule.push('    background-size: contain;');
-        cssRule.push('    background-repeat: no-repeat;');
-        cssRule.push('    background-position: center center;');
         if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
@@ -94,10 +95,6 @@ module.exports = function (options) {
         cssRule.push('}');
         cssRule.push(options.cssSelector + options.cssPrefix + normalizedFileName + '-after::after' + ' {');
         cssRule.push('    content:\'\';');
-        cssRule.push('    background-image: url("data:image/svg+xml;charset=utf8, ' + encodedSvg + '");');
-        cssRule.push('    background-size: contain;');
-        cssRule.push('    background-repeat: no-repeat;');
-        cssRule.push('    background-position: center center;');
         if (options.addSize) {
             cssRule.push('    width: ' + width + ';');
             cssRule.push('    height: ' + height + ';');
