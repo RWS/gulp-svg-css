@@ -1,6 +1,6 @@
 {
   "name": "gulp-svg-css-pseudo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Gulp plugin that embeds svg images inside a single CSS file using data-uri. Created on the basis of the plugin gulp-svg-css by Jan Bevers",
   "main": "index.js",
   "scripts": {
