@@ -1,6 +1,4 @@
 # gulp-svg-css-pseudo
-[![Build Status](https://travis-ci.org/budfy/gulp-svg-css-pseudo.svg?branch=master)](https://travis-ci.org/budfy/gulp-svg-css-pseudo)
-[![Coverage Status](https://coveralls.io/repos/github/budfy/gulp-svg-css-pseudo/badge.svg?branch=master)](https://coveralls.io/github/budfy/gulp-svg-css-pseudo?branch=master)
 [![npm version](https://badge.fury.io/js/gulp-svg-css-pseudo.svg)](https://badge.fury.io/js/gulp-svg-css-pseudo)
 [![Dependency Status](https://david-dm.org/budfy/gulp-svg-css-pseudo.svg)](https://david-dm.org/budfy/gulp-svg-css-pseudo)
 [![devDependency Status](https://david-dm.org/budfy/gulp-svg-css-pseudo/dev-status.svg)](https://david-dm.org/budfy/gulp-svg-css-pseudo#info=devDependencies)
